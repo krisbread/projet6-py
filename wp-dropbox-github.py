@@ -8,6 +8,22 @@ import subprocess
 import pipes
 import shutil
 import datetime
+import socket
+import platform
+
+## information sur la machine.
+hostname = socket.gethostname()
+
+print("\n\n\t\t########################################################\n")
+print("Informations sur votre sytème :\n")
+print("Le nom de votre machine est :", hostname, "\nVous êtes sur le systéme d'exploitation", platform.system(), "en version", platform.version(), "avec processeur", platform.machine(),"\n")
+if platform.system() == "linux" :
+    print("Informations sur votre système :\n")
+else :
+    print("Désolé, programme en cours de développement pour le sytème d'exploitation", platform.system())
+    print("L'application va se fermer.\n\n")
+    quit()
+
 
 # Dossiers de sauvegarde
 sauv = ('/tmp/sauvegarde')
@@ -50,7 +66,7 @@ except:
     print('le dossier : sauve_wp est deja present')
 
 # sauvegarde de la base de données wordpress dans 'sauv_wp'
-dbpassword = '*****'
+dbpassword = '*****' ### indiquer votre mot de passe (attention mdp en clair !!!)
 dbhost = 'localhost'
 dbwp = 'wp_opcr'
 dbwp_sauv = "wp_opcr.sql"
@@ -94,7 +110,7 @@ except IOError:
 
 ## Upload des sauvegardes vers DropBox
 import dropbox
-TOKEN = "inserer ici le jeton obtenu " 
+TOKEN = "inserer ici le jeton obtenu " # jeton obtenu sur dropbox votre compte
 LOCAL_PATH = "/tmp/sauvegarde/sauv_zip/bdd.zip"    # replace by your local data
 REMOTE_PATH = "/bdd.zip"                # replace by the full name of the remote file 
 LOCAL_PATH1 = "/tmp/sauvegarde/sauv_zip/wp.zip"
