@@ -1,17 +1,12 @@
 #!/usr/bin/python3
 
-import os
+import os, platform, socket, datetime, shutil, pipes, subprocess
 from os import getcwd
 from os import chdir
 from os import mkdir
-import subprocess
-import pipes
-import shutil
-import datetime
-import socket
-import platform
 
-## information sur la machine.
+
+# 1 # informations sur la machine.
 hostname = socket.gethostname()
 
 print("\n\n\t\t########################################################\n")
@@ -25,7 +20,7 @@ else :
     quit()
 
 
-# Dossiers de sauvegarde
+# 2 # Dossiers de sauvegarde
 sauv = ('/tmp/sauvegarde')
   # dossier contenant les sauvegardes compréssées pour envoi
 sauv_zip = ('/tmp/sauvegarde/sauv_zip')
@@ -65,7 +60,7 @@ try:
 except: 
     print('le dossier : sauve_wp est deja present')
 
-# sauvegarde de la base de données wordpress dans 'sauv_wp'
+# 3 # sauvegarde de la base de données wordpress dans 'sauv_bdd'
 dbpassword = '*****' ### indiquer votre mot de passe (attention mdp en clair !!!)
 dbhost = 'localhost'
 dbwp = 'wp_opcr'
@@ -78,9 +73,8 @@ if os.system(dump_cmd) == 0:
 else:
        print('une erreur c\'est produite lors de la sauvegarde de la base de données')
 
-#subprocess.check_output(dump_cmd, shell=True)
 
-# sauvegarde de wordpress 'dossier html' dans sauv_wp
+# 4 # sauvegarde de wordpress 'dossier html' dans sauv_wp
 path_wordpress = '/var/www'
 datetime = datetime.datetime.now().strftime("%y-%m-%d_%Hh-%M")
 try:
@@ -93,16 +87,14 @@ except IOError:
 # Compression des sauvegardes vers sauv_zip
   # zip de la base de données vers sauv_zip
 try:
-#    shutil.make_archive('/tmp/sauvegarde/sauv_zip/bdd.'+datetime, 'zip' , sauv_bdd)
     shutil.make_archive('/tmp/sauvegarde/sauv_zip/bdd', 'zip' , sauv_bdd)
-#    shutil.make_archive('/tmp/sauvegarde/sauv_zip/bdd.'+datetime, 'zip' , sauv_bdd)
     print('la sauvegarde de la base de données au format zip c\'est correctement effectuée')
-#	shutil.rmtree(sauv_bdd, dbwp_sauv)
+
 except IOError: 
     print('une erreur c\'est produite lors de la sauvegarde au format zip de la base de données')
+ 
   # zip wp vers sauv_zip
 try:
-#    shutil.make_archive('/tmp/sauvegarde/sauv_zip/wp.'+datetime, 'zip' , sauv_wp)
     shutil.make_archive('/tmp/sauvegarde/sauv_zip/wp', 'zip' , sauv_wp)
     print('la sauvegarde wordpress au format zip c\'est correctement effectuée')
 except IOError:
@@ -154,3 +146,5 @@ def main(args):
 if __name__ == '__main__':
     import sys
     sys.exit(main(sys.argv))
+
+
