@@ -84,7 +84,7 @@ try:
 except IOError:
     print('un dossier de sauvegarde datetime a ete cree il y a moins d/une minute')
 
-# Compression des sauvegardes vers sauv_zip
+# 5 # Compression des sauvegardes vers sauv_zip
   # zip de la base de données vers sauv_zip
 try:
     shutil.make_archive('/tmp/sauvegarde/sauv_zip/bdd', 'zip' , sauv_bdd)
@@ -100,7 +100,7 @@ try:
 except IOError:
     print('une erreur c\'est produite lors de la sauvegarde au format zip du dossier wordpress')
 
-## Upload des sauvegardes vers DropBox
+## 6 # Upload des sauvegardes vers DropBox
 import dropbox
 TOKEN = "inserer ici le jeton obtenu " # jeton obtenu sur dropbox votre compte
 LOCAL_PATH = "/tmp/sauvegarde/sauv_zip/bdd.zip"    # replace by your local data
