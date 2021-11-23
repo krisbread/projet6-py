@@ -18,4 +18,4 @@ Utilisation de : (datetime.datetime.now().strftime("%y-%m-%d_%Hh-%M") et (shutil
 
 5 # compression individuelle des dossiers sauvegardés vers le dossier sauv_zip (shutil.make_archive())
 
-
+6 # Upload des sauvegardes sur DropBox.
