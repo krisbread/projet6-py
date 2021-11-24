@@ -5,13 +5,16 @@ from os import getcwd
 from os import chdir
 from os import mkdir
 
+print("\n\n\t\t###########################################################")
+print("\t\tSauvergarde de Wordpress et sa base de données vers DropBox")
+print("\t\t###########################################################\n\n")
 
 # 1 # informations sur la machine.
 hostname = socket.gethostname()
 
-print("\n\n\t\t########################################################\n")
 print("Informations sur votre sytème :\n")
 print("Le nom de votre machine est :", hostname, "\nVous êtes sur le systéme d'exploitation", platform.system(), "en version", platform.version(), "avec processeur", platform.machine(),"\n")
+
 if platform.system() == "linux" :
     print("Informations sur votre système :\n")
 else :
@@ -19,6 +22,7 @@ else :
     print("L'application va se fermer.\n\n")
     quit()
 
+print("\n\n\t\t########################################################\n")
 
 # 2 # Dossiers de sauvegarde
 sauv = ('/tmp/sauvegarde')
@@ -35,30 +39,41 @@ sauv_wp = ('/tmp/sauvegarde/sauv_wp')
   # dossier sauvegarde
 try:
     os.mkdir(sauv)
-    print('création du dossier principal de sauvegarde ')
-except: 
-    print('le dossier : sauvegarde est deja present')
+    print('création du dossier principal de sauvegarde : ',sauv)
+except FileExistsError:
+    print('Le dossier : ', sauv, 'est déjà existant' )
+except Exception as err:
+    print('L\'erreur suivante c\'est produite :', err)
 
   # dossier sauv_zip
 try:
     os.mkdir(sauv_zip)
-    print('création du dossier de sauvegarde : sauv_zip')
-except: 
-    print('le dossier : sauv_zip est deja present')
+    print('création du dossier de sauvegarde : ', sauv_zip)
+except FileExistsError:
+    print('Le dossier : ', sauv_zip, 'est déjà existant' )
+except Exception as err:
+    print('L\'erreur suivante c\'est produite :', err)
 
   # dossier sauv_bdd
 try:
     os.mkdir(sauv_bdd)
-    print('création du dossier de sauvegarde : sauv_bdd')
-except: 
-    print('le dossier : sauv_bdd est deja present')
+    print('création du dossier de sauvegarde : ', sauv_bdd)
+except FileExistsError:
+    print('Le dossier : ', sauv_bdd, 'est déjà existant' )
+except Exception as err:
+    print('L\'erreur suivante c\'est produite :', err)
 
   # dossier sauv_wp
 try:
     os.mkdir(sauv_wp)
-    print('création du dossier de sauvegarde : sauv_wp')
-except: 
-    print('le dossier : sauve_wp est deja present')
+    print('création du dossier de sauvegarde : ', sauv_wp)
+except FileExistsError:
+    print('Le dossier : ', sauv_wp, 'est déjà existant' )
+except Exception as err:
+    print('L\'erreur suivante c\'est produite :', err)
+
+print("\n\n\t\t########################################################\n")
+print("Création des sauvegardes\n")
 
 # 3 # sauvegarde de la base de données wordpress dans 'sauv_bdd'
 dbpassword = '*****' ### indiquer votre mot de passe (attention mdp en clair !!!)
@@ -68,10 +83,11 @@ dbwp_sauv = "wp_opcr.sql"
 dump_cmd = 'mysqldump'+ ' -u '+ 'root' + ' -p[dbpassword] ' +  dbwp + ' > ' + pipes.quote(sauv_bdd) + '/' + dbwp + '.sql'
 
 # Execution et vérification de l'execution de la commande 'dump_cmd'
-if os.system(dump_cmd) == 0:
-       print("La sauvegarde de la base de données c'est correctement effectuée")
-else:
-       print('une erreur c\'est produite lors de la sauvegarde de la base de données')
+try:
+    os.system(dump_cmd) == 0
+    print("La sauvegarde de la base de données c'est correctement effectuée")
+except Exception as err:
+    print("une erreur c\'est produite lors de la sauvegarde de la base de données: ", err)
 
 
 # 4 # sauvegarde de wordpress 'dossier html' dans sauv_wp
@@ -84,14 +100,17 @@ try:
 except IOError:
     print('un dossier de sauvegarde datetime a ete cree il y a moins d/une minute')
 
+print("\n\n\t\t########################################################\n")
+print("Compression des dossiers sauvegardés vers le dossier /sauv_zip\n")
+
 # 5 # Compression des sauvegardes vers sauv_zip
   # zip de la base de données vers sauv_zip
 try:
     shutil.make_archive('/tmp/sauvegarde/sauv_zip/bdd', 'zip' , sauv_bdd)
     print('la sauvegarde de la base de données au format zip c\'est correctement effectuée')
 
-except IOError: 
-    print('une erreur c\'est produite lors de la sauvegarde au format zip de la base de données')
+except Exception as err:
+    print('L\'erreur suivante c\'est produite :', err)
  
   # zip wp vers sauv_zip
 try:
@@ -99,6 +118,11 @@ try:
     print('la sauvegarde wordpress au format zip c\'est correctement effectuée')
 except IOError:
     print('une erreur c\'est produite lors de la sauvegarde au format zip du dossier wordpress')
+except Exception as err:
+    print('L\'erreur suivante c\'est produite :', err)
+
+print("\n\n\t\t########################################################\n")
+print("Connexion à DropBox et upload des dossiers .zip\n")
 
 ## 6 # Upload des sauvegardes vers DropBox
 import dropbox
