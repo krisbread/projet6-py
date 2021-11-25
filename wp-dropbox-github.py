@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import os, platform, socket, datetime, shutil, pipes, subprocess
+import os, platform, socket, datetime, shutil, pipes, subprocess, urllib.request
 from os import getcwd
 from os import chdir
 from os import mkdir
@@ -122,9 +122,19 @@ except Exception as err:
     print('L\'erreur suivante c\'est produite :', err)
 
 print("\n\n\t\t########################################################\n")
+
+## 6 # Test de connexion à internet
+try:
+    urllib.request.urlopen('http://google.com')
+    print('le test de connexion à internet est : OK')
+except:
+    print('le test de connexion à internet a échoué. Le programme va se fermer')
+    quit()
+
+
 print("Connexion à DropBox et upload des dossiers .zip\n")
 
-## 6 # Upload des sauvegardes vers DropBox
+## 7 # Upload des sauvegardes vers DropBox
 import dropbox
 TOKEN = "inserer ici le jeton obtenu " # jeton obtenu sur dropbox votre compte
 LOCAL_PATH = "/tmp/sauvegarde/sauv_zip/bdd.zip"    # replace by your local data
