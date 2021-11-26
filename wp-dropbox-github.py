@@ -15,14 +15,15 @@ hostname = socket.gethostname()
 print("Informations sur votre sytème :\n")
 print("Le nom de votre machine est :", hostname, "\nVous êtes sur le systéme d'exploitation", platform.system(), "en version", platform.version(), "avec processeur", platform.machine(),"\n")
 
-if platform.system() == "linux" :
-    print("Informations sur votre système :\n")
+print("\n\t\t########################################################")
+
+if platform.system() != "linux" :
+    print("Création des dossiers de sauvegarde :\n")
 else :
     print("Désolé, programme en cours de développement pour le sytème d'exploitation", platform.system())
     print("L'application va se fermer.\n\n")
     quit()
 
-print("\n\n\t\t########################################################\n")
 
 # 2 # Dossiers de sauvegarde
 sauv = ('/tmp/sauvegarde')
@@ -76,7 +77,7 @@ print("\n\n\t\t########################################################\n")
 print("Création des sauvegardes\n")
 
 # 3 # sauvegarde de la base de données wordpress dans 'sauv_bdd'
-dbpassword = '*****' ### indiquer votre mot de passe (attention mdp en clair !!!)
+dbpassword = '****' ### indiquer votre mot de passe (attention mdp en clair !!!)
 dbhost = 'localhost'
 dbwp = 'wp_opcr'
 dbwp_sauv = "wp_opcr.sql"
@@ -84,7 +85,7 @@ dump_cmd = 'mysqldump'+ ' -u '+ 'root' + ' -p[dbpassword] ' +  dbwp + ' > ' + pi
 
 # Execution et vérification de l'execution de la commande 'dump_cmd'
 try:
-    os.system(dump_cmd) == 0
+    os.system(dump_cmd)
     print("La sauvegarde de la base de données c'est correctement effectuée")
 except Exception as err:
     print("une erreur c\'est produite lors de la sauvegarde de la base de données: ", err)
@@ -93,12 +94,15 @@ except Exception as err:
 # 4 # sauvegarde de wordpress 'dossier html' dans sauv_wp
 path_wordpress = '/var/www'
 datetime = datetime.datetime.now().strftime("%y-%m-%d_%Hh-%M")
-try:
-    shutil.copytree(path_wordpress , sauv_wp +'/'+ datetime)
-    print('sauvegarde du dossier html effectuée dans le dossier : ' + datetime)
-    print('chemin complet de la sauvegarde : '+  sauv_wp +'/'+ datetime)
-except IOError:
-    print('un dossier de sauvegarde datetime a ete cree il y a moins d/une minute')
+if os.path.exists(path_wordpress):
+    try:
+        shutil.copytree(path_wordpress , sauv_wp +'/'+ datetime)
+        print('sauvegarde du dossier html effectuée dans le dossier : ' + datetime)
+        print('chemin complet de la sauvegarde : '+  sauv_wp +'/'+ datetime)
+    except Exception as err:
+        print("une erreur c\'est produite lors de la sauvegarde du dossier html:\n ", err)
+else: 
+    print('la sauvegarde du dossier html ne c\'est pas effectuée - Le chemin :' ,path_wordpress ,'n\'existe pas.')
 
 print("\n\n\t\t########################################################\n")
 print("Compression des dossiers sauvegardés vers le dossier /sauv_zip\n")
